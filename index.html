@@ -5,38 +5,272 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sungwoo Choi</title>
   <style>
+    * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
-      max-width: 760px;
+      max-width: 900px;
       margin: 60px auto;
-      padding: 0 20px;
+      padding: 0 20px 80px;
       line-height: 1.6;
+      background:
+        radial-gradient(circle at top, rgba(80,120,255,0.12), transparent 30%),
+        linear-gradient(180deg, #0b1020 0%, #111827 45%, #0f172a 100%);
+      color: #f3f4f6;
     }
+
     h1 { margin-bottom: 8px; }
-    .muted { color: #666; }
+    h2 { margin-bottom: 10px; }
+    .muted { color: #9ca3af; }
     section { margin-top: 28px; }
+
+    a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    /* fancy object */
+    .reactor-wrap {
+      margin-top: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 420px;
+      perspective: 1200px;
+    }
+
+    .reactor-scene {
+      width: 340px;
+      height: 340px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out;
+      filter: drop-shadow(0 0 35px rgba(99, 102, 241, 0.35));
+    }
+
+    .reactor-core {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 35%, #ffffff 0%, #c4b5fd 15%, #60a5fa 35%, #312e81 70%, #0f172a 100%);
+      box-shadow:
+        0 0 25px rgba(96, 165, 250, 0.8),
+        0 0 60px rgba(129, 140, 248, 0.5),
+        inset 0 0 20px rgba(255,255,255,0.35);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .reactor-core::before,
+    .reactor-core::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .reactor-core::after {
+      inset: -36px;
+      border-color: rgba(96,165,250,0.2);
+    }
+
+    .ring {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transform-style: preserve-3d;
+    }
+
+    .ring-1 {
+      width: 220px;
+      height: 220px;
+      border-top-color: #60a5fa;
+      border-bottom-color: #818cf8;
+      animation: spinX 7s linear infinite;
+    }
+
+    .ring-2 {
+      width: 270px;
+      height: 270px;
+      border-left-color: #c084fc;
+      border-right-color: #22d3ee;
+      transform: rotateX(70deg) rotateY(20deg);
+      animation: spinY 9s linear infinite reverse;
+    }
+
+    .ring-3 {
+      width: 320px;
+      height: 320px;
+      border-top-color: rgba(255,255,255,0.5);
+      border-right-color: rgba(96,165,250,0.6);
+      transform: rotateY(70deg) rotateZ(20deg);
+      animation: spinZ 11s linear infinite;
+    }
+
+    .spark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      margin: -5px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 14px currentColor, 0 0 28px currentColor;
+      opacity: 0.85;
+    }
+
+    .spark:nth-child(5n+1) { color: #60a5fa; }
+    .spark:nth-child(5n+2) { color: #a78bfa; }
+    .spark:nth-child(5n+3) { color: #22d3ee; }
+    .spark:nth-child(5n+4) { color: #f9a8d4; }
+    .spark:nth-child(5n)   { color: #ffffff; }
+
+    .reactor-label {
+      text-align: center;
+      margin-top: 18px;
+      color: #cbd5e1;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.08);
+      }
+    }
+
+    @keyframes spinX {
+      from { transform: rotateX(70deg) rotateZ(0deg); }
+      to   { transform: rotateX(70deg) rotateZ(360deg); }
+    }
+
+    @keyframes spinY {
+      from { transform: rotateY(70deg) rotateZ(0deg); }
+      to   { transform: rotateY(70deg) rotateZ(360deg); }
+    }
+
+    @keyframes spinZ {
+      from { transform: rotateZ(0deg) rotateY(70deg); }
+      to   { transform: rotateZ(360deg) rotateY(70deg); }
+    }
+
+    @keyframes orbit {
+      from {
+        transform: rotate(var(--angle)) translateX(var(--radius)) scale(0.7);
+      }
+      50% {
+        transform: rotate(calc(var(--angle) + 180deg)) translateX(var(--radius)) scale(1.2);
+      }
+      to {
+        transform: rotate(calc(var(--angle) + 360deg)) translateX(var(--radius)) scale(0.7);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .reactor-scene {
+        width: 260px;
+        height: 260px;
+      }
+
+      .ring-1 { width: 170px; height: 170px; }
+      .ring-2 { width: 210px; height: 210px; }
+      .ring-3 { width: 250px; height: 250px; }
+
+      .reactor-core {
+        width: 90px;
+        height: 90px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Sungwoo Choi</h1>
-  <p class="muted">Personal homepage</p>
+  <div class="card">
+    <h1>Sungwoo Choi</h1>
+    <p class="muted">Personal homepage</p>
 
-  <section>
-    <h2>About</h2>
-    <p>안녕하세요. 최성우입니다.</p>
+    <section>
+      <h2>About</h2>
+      <p>안녕하세요. 최성우입니다.</p>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      <ul>
+        <li>Project 1</li>
+        <li>Project 2</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Email: your-email@example.com</p>
+    </section>
+  </div>
+
+  <section class="reactor-wrap">
+    <div>
+      <div class="reactor-scene" id="reactor">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="reactor-core"></div>
+
+        <div class="spark" style="--angle: 0deg; --radius: 110px; animation: orbit 5s linear infinite;"></div>
+        <div class="spark" style="--angle: 30deg; --radius: 135px; animation: orbit 7s linear infinite reverse;"></div>
+        <div class="spark" style="--angle: 60deg; --radius: 150px; animation: orbit 6s linear infinite;"></div>
+        <div class="spark" style="--angle: 90deg; --radius: 120px; animation: orbit 8s linear infinite reverse;"></div>
+        <div class="spark" style="--angle: 120deg; --radius: 145px; animation: orbit 5.5s linear infinite;"></div>
+        <div class="spark" style="--angle: 150deg; --radius: 130px; animation: orbit 9s linear infinite reverse;"></div>
+        <div class="spark" style="--angle: 180deg; --radius: 155px; animation: orbit 6.5s linear infinite;"></div>
+        <div class="spark" style="--angle: 210deg; --radius: 125px; animation: orbit 8.5s linear infinite reverse;"></div>
+        <div class="spark" style="--angle: 240deg; --radius: 145px; animation: orbit 7.2s linear infinite;"></div>
+        <div class="spark" style="--angle: 270deg; --radius: 115px; animation: orbit 5.8s linear infinite reverse;"></div>
+        <div class="spark" style="--angle: 300deg; --radius: 140px; animation: orbit 6.8s linear infinite;"></div>
+        <div class="spark" style="--angle: 330deg; --radius: 152px; animation: orbit 7.8s linear infinite reverse;"></div>
+      </div>
+      <div class="reactor-label">Experimental Core</div>
+    </div>
   </section>
 
-  <section>
-    <h2>Projects</h2>
-    <ul>
-      <li>Project 1</li>
-      <li>Project 2</li>
-    </ul>
-  </section>
+  <script>
+    const reactor = document.getElementById('reactor');
 
-  <section>
-    <h2>Contact</h2>
-    <p>Email: sungwoo.choi@snu.ac.kr</p>
-  </section>
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 24;
+      const y = (e.clientY / window.innerHeight - 0.5) * -24;
+      reactor.style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      reactor.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  </script>
 </body>
 </html>
